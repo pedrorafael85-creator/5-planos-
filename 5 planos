@@ -1,0 +1,336 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planificações Quinzenais</title>
+
+<style>
+@page {
+  size: A4 landscape;
+  margin: 8mm;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000;
+  background: #eee;
+}
+
+.toolbar {
+  padding: 12px;
+  text-align: center;
+  background: white;
+  border-bottom: 1px solid #999;
+}
+
+button {
+  padding: 11px 16px;
+  margin: 4px;
+  font-size: 15px;
+}
+
+.page {
+  width: 281mm;
+  min-height: 194mm;
+  margin: 12px auto;
+  background: white;
+  page-break-after: always;
+  break-after: page;
+}
+
+.page:last-child {
+  page-break-after: auto;
+  break-after: auto;
+}
+
+.heading {
+  text-align: center;
+  position: relative;
+  padding-top: 3mm;
+}
+
+.school {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.plan-title {
+  font-weight: bold;
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+.datebox {
+  position: absolute;
+  right: 0;
+  top: 8mm;
+  border: 1px solid black;
+  padding: 5px 9px;
+  font-size: 12px;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 7mm;
+  border: 1px solid black;
+}
+
+.meta div {
+  padding: 8px;
+  min-height: 10mm;
+  font-size: 12px;
+}
+
+.meta div:nth-child(odd) {
+  border-right: 1px solid black;
+}
+
+.meta div:nth-child(-n+2) {
+  border-bottom: 1px solid black;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-top: 4mm;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 6px;
+  overflow-wrap: anywhere;
+}
+
+th {
+  height: 13mm;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 12px;
+}
+
+td {
+  height: 57mm;
+  vertical-align: top;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.c1 { width: 22%; }
+.c2 { width: 20%; }
+.c3 { width: 19%; }
+.c4 { width: 24%; }
+.c5 { width: 9%; }
+.c6 { width: 6%; }
+
+.signature {
+  text-align: right;
+  margin: 7mm 3mm 0 0;
+  font-size: 12px;
+}
+
+.signature span {
+  display: inline-block;
+  border-top: 1px solid black;
+  width: 75mm;
+  text-align: center;
+  padding-top: 2mm;
+}
+
+@media print {
+  body { background: white; }
+  .toolbar { display: none; }
+  .page {
+    width: auto;
+    min-height: 0;
+    margin: 0;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .preview {
+    overflow-x: auto;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="toolbar">
+  <button onclick="window.print()">
+    Imprimir / Guardar como PDF
+  </button>
+  <button onclick="descarregarHTML()">
+    Descarregar ficheiro HTML
+  </button>
+  <p>
+    Funciona offline depois de guardar este ficheiro.
+  </p>
+</div>
+
+<div id="planificacoes" class="preview"></div>
+
+<script>
+const planos = [
+{
+classe: "10.ª",
+disciplina: "Geometria Descritiva",
+unidade: "Sistema de dupla Projecção Ortogonal",
+subtema: "Representação da recta",
+objetivo:
+"Compreender e representar a recta no sistema de dupla projecção ortogonal.",
+atividades:
+"Explicação dos conceitos; identificação das projecções horizontal e frontal; representação das projecções da recta; resolução de exercícios gráficos e correcção colectiva."
+},
+{
+classe: "10.ª",
+disciplina: "Desenho de Projecto",
+unidade: "Normatização",
+subtema: "Cotagem em série e em paralelo",
+objetivo:
+"Aplicar correctamente as normas de cotagem em série e em paralelo nos desenhos técnicos.",
+atividades:
+"Revisão dos elementos de cotagem; demonstração dos métodos em série e em paralelo; comparação das aplicações; execução de exercícios de cotagem e correcção."
+},
+{
+classe: "11.ª",
+disciplina: "Geometria Descritiva",
+unidade: "Projecções",
+subtema: "Figuração assente em planos não projectantes",
+objetivo:
+"Representar figuras assentes em planos não projectantes através das respectivas projecções.",
+atividades:
+"Análise das condições de pertença da figura ao plano; construção das projecções; resolução orientada de problemas gráficos; exercícios individuais e correcção colectiva."
+},
+{
+classe: "11.ª",
+disciplina: "Desenho de Projecto",
+unidade: "Projecto 01",
+subtema: "Cortes e alçados",
+objetivo:
+"Interpretar e elaborar cortes e alçados de acordo com as convenções do desenho de projecto.",
+atividades:
+"Leitura de plantas; identificação dos planos de corte; demonstração da representação de cortes e alçados; execução dos desenhos e verificação da correspondência entre vistas."
+},
+{
+classe: "12.ª",
+disciplina: "Desenho de Projecto",
+unidade: "Projecto 01",
+subtema: "Cortes e alçados",
+objetivo:
+"Desenvolver cortes e alçados coerentes com a planta e as convenções técnicas do projecto.",
+atividades:
+"Interpretação do projecto-base; definição dos planos de corte; elaboração de cortes e alçados; verificação das dimensões, correspondências e convenções gráficas."
+}
+];
+
+function escapar(texto) {
+  return String(texto).replace(/[&<>"']/g, c => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[c]);
+}
+
+function criarPlano(p) {
+  return `
+  <section class="page">
+
+    <div class="heading">
+      <div class="school">
+        Instituto Politécnico Nº 7017 CNO -
+        Chico Mendeliev - Cambambe
+      </div>
+      <div class="plan-title">Plano Quinzenal</div>
+      <div class="datebox">23 / 10 / 2026</div>
+    </div>
+
+    <div class="meta">
+      <div><b>Especialidade:</b> Desenho</div>
+      <div><b>Datas:</b> 26/10 a 06/11/2026</div>
+      <div><b>Classe:</b> ${escapar(p.classe)}</div>
+      <div><b>Disciplina:</b> ${escapar(p.disciplina)}</div>
+    </div>
+
+    <table>
+      <colgroup>
+        <col class="c1">
+        <col class="c2">
+        <col class="c3">
+        <col class="c4">
+        <col class="c5">
+        <col class="c6">
+      </colgroup>
+
+      <thead>
+        <tr>
+          <th>Unidade(s) Temática(s)</th>
+          <th>Subtemas</th>
+          <th>Objectivos Gerais</th>
+          <th>Actividades</th>
+          <th>Datas Prováveis</th>
+          <th>OBS</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>${escapar(p.unidade)}</td>
+          <td>${escapar(p.subtema)}</td>
+          <td>${escapar(p.objetivo)}</td>
+          <td>${escapar(p.atividades)}</td>
+          <td style="text-align:center">
+            26–30/10<br><br>02–06/11
+          </td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td></td><td></td><td></td>
+          <td></td><td></td><td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="signature">
+      <span>O Professor</span>
+    </div>
+
+  </section>`;
+}
+
+document.getElementById("planificacoes").innerHTML =
+  planos.map(criarPlano).join("");
+
+function descarregarHTML() {
+  const conteudo =
+    "<!DOCTYPE html>\n" +
+    document.documentElement.outerHTML;
+
+  const ficheiro = new Blob(
+    [conteudo],
+    { type: "text/html;charset=utf-8" }
+  );
+
+  const url = URL.createObjectURL(ficheiro);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "5_planificacoes_quinzenais.html";
+  link.click();
+
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+}
+</script>
+
+</body>
+</html>
